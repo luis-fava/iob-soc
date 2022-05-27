@@ -104,7 +104,7 @@ module system_tb;
     end
   end
 
-system_top top(
+system_top system_top(
    .clk               (clk),
    .reset           (reset),
    .trap             (trap),
