@@ -51,76 +51,59 @@ int main()
   uart_puts("\n\n\nTest PCIE!\n\n\n");
 
 
-  //while(1);
   
   IOB_PCIE_INIT_BASEADDR(PCIE_BASE);
 
-  while(1) {
-
     
-    //state 0
-
-    while  (! IOB_PCIE_GET_LEN_VALID());
-
-    IOB_PCIE_SET_LEN_ACK(1);
-    int rLen =  IOB_PCIE_GET_LEN();
-
-    long long rData [100];
   
-    //state 1
 
-    for (int i = 0 ; i < rLen ; i++){
+  
+  
 
-      while(!IOB_PCIE_GET_DATA_VALID());
-      
-      rData[i] = IOB_PCIE_GET_DATAH();
+  long long rData [100];  
 
+
+#ifndef SIM
+
+ 
+  int rLen =  IOB_PCIE_GET_RXCHNL_LEN();
+  
+  for (int i = 0 ; i < 2 * rLen ; i++){
+    rData[i] = IOB_PCIE_GET_RXCHNL_DATA();
+    printf("data[%d]! %d \n",i, rData[i]);
+    };
+
+  
+  IOB_PCIE_SET_TXCHNL_LEN(rLen);
+
+  for (int i = 0 ; i < 2 * rLen ; i++){
+    IOB_PCIE_SET_TXCHNL_DATA(rData[i]);
+    printf("datasent[%d] \n",i);
   };
   
 
-    
-  //state 2
 
-  IOB_PCIE_SET_CHNL(1);
+#else
+  
+  IOB_PCIE_SET_TXCHNL_LEN(20);
 
-  for (int i = 0 ; i < rLen ; i++){
-    IOB_PCIE_SET_DATA_VALID(0);
-    while (!IOB_PCIE_GET_DATA_REN());
-    IOB_PCIE_SET_DATAH(rData[i]+2);
-    IOB_PCIE_SET_DATA_VALID(1);
+  for (int i = 0 ; i < 2 * 20 ; i++){
+    IOB_PCIE_SET_TXCHNL_DATA(i);
+    printf("datasent[%d] \n",i);
   };
-};
-    
-  
-  
-  
-  
-  
+
+#endif
   
   
 
-    
+#ifdef SIM
   
-  //test file send
-  char *sendfile = malloc(1000);
-  int send_file_size = 0;
-  send_file_size = string_copy(sendfile, send_string);
-  uart_sendfile("Sendfile.txt", send_file_size, sendfile);
-
-  //test file receive
-  char *recvfile = malloc(10000);
-  int file_size = 0;
-  file_size = uart_recvfile("Sendfile.txt", recvfile);
-
-  //compare files
-  if (compare_str(sendfile, recvfile, send_file_size)) {
-      printf("FAILURE: Send and received file differ!\n");
-  } else {
-      printf("SUCCESS: Send and received file match!\n");
-  }
-
-  free(sendfile);
-  free(recvfile);
+  int rLen =  IOB_PCIE_GET_RXCHNL_LEN();
+  for (int i = 0 ; i < 2 * rLen ; i++){
+    rData[i] = IOB_PCIE_GET_RXCHNL_DATA();
+    printf("data[%d]! %d \n",i, rData[i]);
+  };
+#endif
 
   uart_finish();
 }
