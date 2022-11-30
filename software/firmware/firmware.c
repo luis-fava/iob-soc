@@ -2,6 +2,7 @@
 #include "periphs.h"
 #include "iob-uart.h"
 #include "printf.h"
+#include "iob-gpio.h"
 
 char *send_string = "Sending this string as a file to console.\n"
                     "The file is then requested back from console.\n"
@@ -41,6 +42,9 @@ int compare_str(char *str1, char *str2, int str_size) {
 
 int main()
 {
+  //init gpio
+  gpio_init(GPIO_BASE);
+
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
 

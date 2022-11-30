@@ -36,7 +36,7 @@ INIT_MEM ?=1
 #PERIPHERAL LIST
 #must match respective submodule CORE_NAME in the core.mk file of the submodule
 #PERIPHERALS:=UART
-PERIPHERALS ?=UART
+PERIPHERALS ?=UART GPIO
 
 #RISC-V HARD MULTIPLIER AND DIVIDER INSTRUCTIONS
 USE_MUL_DIV ?=1
@@ -61,9 +61,6 @@ BOARD ?=CYCLONEV-GT-DK
 #default document to compile
 DOC ?= pb
 
-#IOB LIBRARY
-UART_HW_DIR:=$(UART_DIR)/hardware
-
 ####################################################################
 # DERIVED FROM PRIMARY PARAMETERS: DO NOT CHANGE BELOW THIS POINT
 ####################################################################
@@ -85,6 +82,7 @@ endif
 PICORV32_DIR=$(ROOT_DIR)/submodules/PICORV32
 CACHE_DIR=$(ROOT_DIR)/submodules/CACHE
 UART_DIR=$(ROOT_DIR)/submodules/UART
+GPIO_DIR=$(ROOT_DIR)/submodules/GPIO
 LIB_DIR=$(ROOT_DIR)/submodules/LIB
 MEM_DIR=$(ROOT_DIR)/submodules/MEM
 AXI_DIR=$(ROOT_DIR)/submodules/AXI
